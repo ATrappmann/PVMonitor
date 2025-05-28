@@ -1,6 +1,7 @@
 # PV-Monitor
 
 **PV-Monitor** ist ein *ESP-Projekt* zur Optimierung der Null-Einspeisung eines Balkonkraftwerks mit Wechselrichter und Akkuspeicher.
+
 *Null-Einspeisung* bedeutet, dass die gesamte PV-Leistung selbst verbraucht wird und nicht für kleines Geld an den 
 Energieversorger abgegeben wird. Dazu steuert der **PV-Monitor** die Einspeiseleistung so, dass der Wechselrichter 
 rund um die Uhr läuft und mit Hilfe des Akkuspeichers auch nachts mindestens die Grundversorgung sicherstellen kann.
