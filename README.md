@@ -41,6 +41,11 @@ ein Interface bereit.
 
 ![History](/docs/History.png)
 
+Über ein kleines Display wird vom **PVMonitor** separat für die Ost- und West-Seite die aktuelle PV-Eingangsleistung in Watt [W] und die kumulierte Tagesleistung in Wattstunden [Wh] dargestellt.
+Außerdem die Batteriespannung und der *State-of-Charge (SOC)* des Akkuspeichers in Wattstunden [Wh].
+
+![OLED](/docs/PVMonitor-OLED.png)
+
 Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten 
 an einer beliebigen Stelle im Haus zu visualisieren. So entscheiden wir flexibel, ob es sich lohnt die Spülmaschine oder die Waschmaschine
 sofort zu starten oder erst auf die Mittagszeit zu warten, wo tendenziell die höchsten Tageserträge erzielt werden. Die Taste zur Zeitvorwahl
@@ -94,9 +99,10 @@ Der **PVMonitor** ist auf einem Steckbrett schnell montiert:
 
 Es werden folgende Kompenenten benötigt:
 * ESP8266 (D1 mini clone)
-* 0,96" OLED, 127x32 pixel
+* 0,96" OLED, 128x32 pixel
 * 4 Kanal bidirektionale 3.3V-5V Pegelwandler
 * WCS1800
+* kurze Jumper-Kabel (male-male)
 * (optional) 1 Mikro-Taster als Restart-Button
 
 Über Jumper-Kabel werden folgende Verbindungen hergestellt:
@@ -151,7 +157,7 @@ der *Panel Power* immer etwas abgezweigt wird, bis eine Ladekapazität des Akkus
 über die Nacht hinweg abdeckt.
 
 ## Die Software
-Die aktiven Komponeten werden über separate Klassen gesteuert und verwaltet.
+Die aktiven Komponeten werden über separate Klassen und Funktionen gesteuert und verwaltet.
 
 ### Die Klasse *Victron*
 Die Klasse *Victron* verwaltet die Abfrage der MPPT-Laderegler und dekodiert das serielle *VE.direct* Protokoll.
@@ -214,8 +220,8 @@ Die Methode `getYieldYesterday` liefert die PV-Vortagesleistung in Wattstunden [
 ### Die Funktion *getShellyStatus()*
 Über die Funktion `bool getShellyStatus(String ip, ShellyStatus *status)` werden per HTTP-Aufruf die Shelly-Komponenten abgefragt.
 
-Die benötigten Parameter werden in einem Objekt zurückgegeben:
-```struct ShellyStatus {
+Die benötigten Parameter werden in dem Objekt `ShellyStatus` zurückgegeben und enthalten folgende Attribute:
+```struct ShellySetup {
   float power;        // in watt
   float total_power;  // in Wh
   bool  relayOn;      // true if on
