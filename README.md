@@ -6,7 +6,7 @@
 Energieversorger abgegeben wird. Dazu steuert der **PVMonitor** die Einspeiseleistung so, dass der Wechselrichter 
 rund um die Uhr laufen kann und mit Hilfe des Akkuspeichers auch nachts mindestens die Grundversorgung sicherstellt.
 Die dynamische Steuerung der Einspeiseleistung sorgt außerdem auch dafür, dass tagsüber der Akkuspeicher mindestens 
-soweit geladen wird, bis die Grundversorgung für die kommende Nacht sichergestellt ist.
+so weit geladen wird, bis die Grundversorgung für die kommende Nacht sichergestellt ist.
 
 ## Einführung
 
@@ -75,13 +75,13 @@ Die Einspeiseleistung wird mit einem [Shelly Plug S](https://www.shelly.com/de/p
 Der Ladezustand des Akkus wird mit dem Hall-Effekt Stromsensor [WCS1800](https://www.google.com/search?q=wcs1800) überwacht.
 
 Durch die aktive Steuerung des **PVMonitor** werden all diese Komponenten miteinander verbunden und dafür
-gesorgt, dass der Akku nicht leerläuft. Tagsüber wird dynamisch solange Strom von den PV-Modulen zur Ladung des Akkus
+gesorgt, dass der Akku nicht leerläuft. Tagsüber wird dynamisch so lange Strom von den PV-Modulen zur Ladung des Akkus
 abgezweigt, bis der Ladezustand ausreichend ist, um nachts mindestens die Ruheleistung der Verbraucher abzudecken.
 Dies geschieht durch aktive Steuerung des Trucki-Sticks, der ansonsten dafür verantwortlich ist, immer nur genau den Anteil über den 
-Inverter einzuspeisen, der im Haus gerade verbaucht wird.
+Inverter einzuspeisen, der im Haus gerade verbraucht wird.
 
 Als Akkuspeicher werden zwei [50Ah 51.2V LiFePO4-Akkus](https://glceenergy.com/de/products/48v-50ah-lifepo4-battery-mini) verwendet.
-Diese sind parallel angeschlossen, so dass sich eine Gesamtkapzität von 5,12 KWh ergibt. Im Sommer werden bei gutem Wetter täglich ca. 10KWh 
+Diese sind parallel angeschlossen, so dass sich eine Gesamtkapazität von 5,12 KWh ergibt. Im Sommer werden bei gutem Wetter täglich ca. 10KWh 
 durch die PV-Module erzeugt, von denen ungefähr die Hälfte direkt verbraucht werden kann. Der Überschuss kann somit vollständig eingelagert werden.
 
 Seit der Inbetriebnahme habe ich es so geschafft, keine einzige KWh mehr einzuspeisen!
@@ -97,7 +97,7 @@ Der **PVMonitor** ist auf einem Steckbrett schnell montiert:
 
 ![PVMonitor](/docs/PVMonitor.png)
 
-Es werden folgende Kompenenten benötigt:
+Es werden folgende Komponenten benötigt:
 * ESP8266 (D1 mini clone)
 * OLED, 128x32 pixel, I2C, 0,96"
 * 4 Kanal bidirektionale 3.3V-5V Pegelwandler
@@ -116,16 +116,16 @@ Mit dem Einbau des 3-Phasen Energiemesser *Shelly 3EM* in den Zählerschrank der
 festzuhalten, welche Verbraucher/Räume auf welcher Phase liegen. Über die Shelly-App oder das [Shelly Cloud-Interface](https://control.shelly.cloud/) kann man so
 zunächst einmal den Grundverbrauch ermitteln und den ein oder anderen Großverbraucher ausfindig machen. Eine vergessene alte 100W-Glühlampe im Keller oder
 in der Garage ist so schnell gefunden und ausgetauscht. Bei einer Tiefkühltruhe, die sich regelmäßig an- und ausschaltet, lohnt es sich den Verbrauch
-zu notieren und diese dann einmal vollständig abzutauen und das Gitter des Wärmetauscher zu säubern. So spart man schnell 100W in den Spitzen ein.
+zu notieren und diese dann einmal vollständig abzutauen und das Gitter des Wärmetauschers zu säubern. So spart man schnell 100W in den Spitzen ein.
 
 Ist das *Balkonkraftwerk* dann wie hier beschrieben vollständig installiert, wird der *Shelly 3EM* vom **PVMonitor** dazu verwendet, den aktuellen
-Hausverbrauch zu ermittlen. Dieser wird über die URL `http://<IP-Adresse>/status` im Sekundentakt abgefragt. Aus der Antwort im JSON-Format wird der Parameter *total_power* 
+Hausverbrauch zu ermitteln. Dieser wird über die URL `http://<IP-Adresse>/status` im Sekundentakt abgefragt. Aus der Antwort im JSON-Format wird der Parameter *total_power* 
 extrahiert, welcher den aktuellen Gesamtverbrauch des Hauses widerspiegelt. 
 
 ### MPPT-Laderegler
 Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen [*VE.direct*-Schnittstelle](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf)
 ausgelesen. Die passenden Stecker für die Schnittstelle findet man, wenn man nach [JST PH2.0 4-pin](https://de.aliexpress.com/w/wholesale-jst-PH2.0-4pin.html) sucht.
-Ich habe gleich ein fertig konfektionierten Stecker mit Kabel verwendet, um mir das crimpen zu sparen.
+Ich habe gleich fertig konfektionierte Stecker mit Kabel verwendet, um mir das crimpen zu sparen.
 
 Von den so bereitgestellten Daten werden folgende Informationen ausgewertet:
 * Der *Tracker Mode* (OFF, MPPT) zur Tag/Nacht-Erkennung verwendet. 
@@ -144,8 +144,8 @@ Optimierung des Algorithmus des **PVMonitor**, da die PV-Leistung nun vollständ
 Über den Hall-Effekt Stromsensor *WCS1800* wird permanent der Strom gemessen, mit der der Akku geladen bzw. entladen wird.
 Durch Multiplikation der Batteriespannung mit dem Strom und der vergangenen Zeit zwischen zwei Messungen wird durch Aufsummierung
 der Ladezustand des Akkus ermittelt. Die Genauigkeit des Sensors ist nicht so gut wie die eines aktiven Mess-Shunts, dieser
-kostet dafür aber auch nur einen Bruckteil. Der Meßfehler wird in Abhängigkeit von der Batteriespannung und des *Operation State* der MPPT-Laderegler
-bei der Über- und Unterstreitung von Schwellwerten korrigiert, was für den hier vorgesehenen Einsatz vollkommen ausreichend ist.
+kostet dafür aber auch nur einen Bruchteil. Der Messfehler wird in Abhängigkeit von der Batteriespannung und des *Operation State* der MPPT-Laderegler
+bei der Über- und Unterschreitung von Schwellwerten korrigiert, was für den hier vorgesehenen Einsatz vollkommen ausreichend ist.
 
 ### Trucki-Stick (T2SG)
 Aus dem *Trucki-Stick* wird über die URL `http://<IP-Adresse>/json` der Parameter *MAXPOWER* ausgelesen. Dieser 
@@ -158,7 +158,7 @@ der *Panel Power* immer etwas abgezweigt wird, bis eine Ladekapazität des Akkus
 
 
 ## Die Software
-Die aktiven Komponeten werden über separate Klassen und Funktionen gesteuert und verwaltet.
+Die aktiven Komponenten werden über separate Klassen und Funktionen gesteuert und verwaltet.
 
 ### Die Klasse *Victron*
 Die Klasse *Victron* ist in der Datei `Victorn.h` definiert und verwaltet die Abfrage der MPPT-Laderegler und dekodiert das serielle [*VE.direct*-Protokoll](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf).
@@ -258,7 +258,7 @@ Hierzu wird ein Objekt angelegt und mit dem analogen Ausgangspin `AOUT` konfigur
 WCS1800 wcs(CURRENT_SENSOR_PIN);	// AOUT of current monitor
 ```
 
-In der Funktion `setup()` wird das Objekte dann wie folgt initalisiert:
+In der Funktion `setup()` wird das Objekte dann wie folgt initialisiert:
 ```
 // init mean current value
 for (int i=0; i<10; i++) {
@@ -275,7 +275,7 @@ Hierbei werden Ungenauigkeiten bei der Analog/Digital-Wandlungen des *ESP* über
 
 ### Die Klasse *Display*
 Die Klasse *Display* verwaltet die Darstellung auf dem kleinen 0,96"-OLED und ist in der Datei `Display.h` definiert.
-Sie dient zur Kapselung des konkret verwendeten Display vom Rest des Codes. Da die Klasse *Display* von der Klasse *Print* abgeleitet wurde,
+Sie dient zur Kapselung des konkret verwendeten Displays vom Rest des Codes. Da die Klasse *Display* von der Klasse *Print* abgeleitet wurde,
 ist die Verwendung selbsterklärend.
 
 
@@ -304,7 +304,7 @@ Die Funktion `handleHistory()` liefert eine HTML-Seite mit den letzten 30 Tagesw
 Damit der *WCS1800* Hall-Effekt Sensor die richtigen Daten über den Ladezustand des Akkuspeichers ermittelt, müssen die Parameter zunächst kalibriert werden.
 
 In der Datei `WCS1800-Calibration/WCS1800-Calibration.ino` ist hierzu ein kleiner *Sketch* der zunächst auf den *ESP* hochgeladen werden sollte. Zur Kalibrierung
-wird der Akkuspeicher durch Ausschalten des Leitungsschutzschalters vom *Balkonkraftwerk* getrennt. Die folgenden Parameter sollten solange angepasst werden,
+wird der Akkuspeicher durch Ausschalten des Leitungsschutzschalters vom *Balkonkraftwerk* getrennt. Die folgenden Parameter sollten so lange angepasst werden,
 bis diese konstant Stromwerte von 0A ausgeben:
 
 ![WCS1800-Calibration](/docs/WCS1800-Calibration.png)
@@ -312,7 +312,7 @@ bis diese konstant Stromwerte von 0A ausgeben:
 Auch lohnt es sich die tatsächliche Umgebungstemperatur zu messen und den Parameter `WCS_SENS_RATIO` gemäß den Werten aus dem 
 [Datenblatt](https://www.winson.com.tw/uploads/images/WCS1800.pdf) des *WCS1800* anzupassen.
 
-Die so ermittelten Werte müssen in die Datei `WCS1800.cpp` übernommen werden. Dies erfolgt durch kopieren in die gleichlautenden Zeilen:
+Die so ermittelten Werte müssen in die Datei `WCS1800.cpp` übernommen werden. Dies erfolgt durch Kopieren in die gleichlautenden Zeilen:
 
 ![WCS1800-Parameter](/docs/WCS1800-Parameter.png)
 
@@ -323,7 +323,7 @@ Zunächst werden die jeweiligen IP-Adressen der *Shelly-Komponenten* und des *Tr
 
 ![Config-IPAddresses](/docs/Config-IPAddresses.png)
 
-Als nächstes muss die Gesamtkapazität des Akkuspeichers und die gewünschte Minimalreserver für den Nachtbetrieb angegeben werden:
+Als nächstes muss die Gesamtkapazität des Akkuspeichers und die gewünschte Minimalreserve für den Nachtbetrieb angegeben werden:
 
 ![Config-BatteryCapacity](/docs/Config-BatteryCapacity.png)
 
