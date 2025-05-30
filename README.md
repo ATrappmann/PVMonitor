@@ -37,7 +37,11 @@ die maximale Einspeiseleistung des Wechselrichters in Abhängigkeit von PV-Leist
 dynamisch.
 
 Zusätzlich stellt der **PVMonitor** über einen *Web-Server* eine Status-Übersicht, eine PV-Ertragshistorie der letzten 30 Tage und über eine JSON-Schnittstelle 
-ein Interface bereit. Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten zu visualisieren.
+ein Interface bereit. Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten 
+an einer beliebigen Stelle im Haus zu visualisieren.
+
+![History](/docs/History.png)
+![PVMonitor-Display](/docs/PVMonitor-Display.jpg)
 
 **Fazit**: Mit einem über den **PVMonitor** gesteuertem *Balkonkraftwerk* erreicht man zwar keine vollständige Autonomie vom Netzbetreiber, 
 kann aber gegenüber einer großen PV-Anlage mit einem Bruchteil der Investitionskosten den Netzbezug um bis zu 30-50% senken. Gleichzeitig
