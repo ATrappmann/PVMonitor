@@ -99,7 +99,7 @@ Der **PVMonitor** ist auf einem Steckbrett schnell montiert:
 
 Es werden folgende Kompenenten benötigt:
 * ESP8266 (D1 mini clone)
-* 0,96" OLED, 128x32 pixel
+* OLED, 128x32 pixel, I2C, 0,96"
 * 4 Kanal bidirektionale 3.3V-5V Pegelwandler
 * WCS1800
 * kurze Jumper-Kabel (male-male)
@@ -171,7 +171,8 @@ Victron victron2(VICTRON_EAST_RXPIN, -1);  // RX, no TX - EAST side
 ```
 
 In der Funktion `setup()` werden diese Objekte dann wie folgt initalisiert:
-```victron1.init();
+```
+  victron1.init();
   while (!victron1.update()); // wait for initial values
   veLastTrackerModeWest = victron1.getTrackerMode();
   printf("Victron1 (West): %s\n", victron1.getTrackerModeStr());
@@ -227,7 +228,8 @@ sind, die in der Datei `Shelly.h` definiert sind.
 Über die Funktion `bool getShellyStatus(String ip, ShellyStatus *status)` werden per HTTP-Aufruf die Shelly-Komponenten abgefragt.
 
 Die benötigten Parameter werden in dem Objekt `ShellyStatus` zurückgegeben und enthalten folgende Attribute:
-```struct ShellySetup {
+```
+struct ShellySetup {
   float power;        // in watt
   float total_power;  // in Wh
   bool  relayOn;      // true if on
@@ -251,12 +253,14 @@ Die Funktion selbst stellt sicher, dass dieser nicht <50W und >800W sein kann. E
 Die Klasse *WCS1800* verwaltet die Zugriffe auf den Hall-Effekt Stromsensor *WCS1800* und ist in der Datei `WCS1800.h` definiert.
 
 Hierzu wird ein Objekt angelegt und mit dem analogen Ausgangspin `AOUT` konfiguriert:
-```#include "WCS1800.h"
+```
+#include "WCS1800.h"
 WCS1800 wcs(CURRENT_SENSOR_PIN);	// AOUT of current monitor
 ```
 
 In der Funktion `setup()` wird das Objekte dann wie folgt initalisiert:
-```// init mean current value
+```
+// init mean current value
 for (int i=0; i<10; i++) {
    wcs.readCurrent();
 }
@@ -306,7 +310,7 @@ bis diese konstant Stromwerte von 0A ausgeben:
 ![WCS1800-Calibration](/docs/WCS1800-Calibration.png)
 
 Auch lohnt es sich die tatsächliche Umgebungstemperatur zu messen und den Parameter `WCS_SENS_RATIO` gemäß den Werten aus dem 
-[Datenblatt des WCS1800](https://www.winson.com.tw/uploads/images/WCS1800.pdf) anzupassen.
+[Datenblatt](https://www.winson.com.tw/uploads/images/WCS1800.pdf) des *WCS1800* anzupassen.
 
 Die so ermittelten Werte müssen in die Datei `WCS1800.cpp` übernommen werden. Dies erfolgt durch kopieren in die gleichlautenden Zeilen:
 
@@ -325,7 +329,7 @@ Als nächstes muss die Gesamtkapazität des Akkuspeichers und die gewünschte Mi
 
 Zuletzt werden noch die Zugangsdaten für das heimische WLAN konfiguriert:
 
-![Config-WiFi](/docs/Config-WiFi.png]
+![Config-WiFi](/docs/Config-WiFi.png)
 
 Nun kann der gesamte Code übersetzt werden und auf den *ESP* hochgeladen werden.
 
