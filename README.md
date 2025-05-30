@@ -37,10 +37,16 @@ die maximale Einspeiseleistung des Wechselrichters in Abhängigkeit von PV-Leist
 dynamisch.
 
 Zusätzlich stellt der **PVMonitor** über einen *Web-Server* eine Status-Übersicht, eine PV-Ertragshistorie der letzten 30 Tage und über eine JSON-Schnittstelle 
-ein Interface bereit. Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten 
-an einer beliebigen Stelle im Haus zu visualisieren.
+ein Interface bereit. 
 
 ![History](/docs/History.png)
+
+Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten 
+an einer beliebigen Stelle im Haus zu visualisieren. So entscheiden wir flexibel, ob es sich lohnt die Spülmaschine oder die Waschmaschine
+sofort zu starten oder erst auf die Mittagszeit zu warten, wo tendenziell die höchsten Tageserträge erzielt werden. Die Taste zur Zeitvorwahl
+an beiden Geräten hat bei uns auf einmal stark an Bedeutung gewonnen. Auf jeden Fall laufen beide Geräte wegen der begrenzten Einspeiseleistung
+des *Balkonkraftwerks* von maximal 800W nur noch nacheinander.
+
 ![PVMonitor-Display](/docs/PVMonitor-Display.png)
 
 **Fazit**: Mit einem über den **PVMonitor** gesteuertem *Balkonkraftwerk* erreicht man zwar keine vollständige Autonomie vom Netzbetreiber, 
@@ -86,7 +92,7 @@ Der Schaltplan dazu sieht wie folgt aus:
 
 ### Shelly 3EM
 Mit dem Einbau des 3-Phasen Energiemesser *Shelly 3EM* in den Zählerschrank der Hauptverteilung beginnt alles. Hier lohnt es sich auch gleich
-festzuhalten, welche Verbraucher/Räume auf welcher Phase liegen. Über die App oder das [Web-Interface](https://control.shelly.cloud/) kann man so
+festzuhalten, welche Verbraucher/Räume auf welcher Phase liegen. Über die Shelly-App oder das [Shelly Cloud-Interface](https://control.shelly.cloud/) kann man so
 zunächst einmal den Grundverbrauch ermitteln und den ein oder anderen Großverbraucher ausfindig machen. Eine vergessene alte 100W-Glühlampe im Keller oder
 in der Garage ist so schnell gefunden und ausgetauscht. Bei einer Tiefkühltruhe, die sich regelmäßig an- und ausschaltet, lohnt es sich den Verbrauch
 zu notieren und diese dann einmal vollständig abzutauen und das Gitter des Wärmetauscher zu säubern. So spart man schnell 100W in den Spitzen ein.
@@ -110,6 +116,8 @@ Der Wechselrichter ist über einen *Shelly Plug S* ans Stromnetz angeschlossen. 
 URL `http://<IP-Adresse>/status` im Sekundentakt abgefragt. Aus der Antwort im JSON-Format wird der Parameter *power* 
 extrahiert, welcher der aktuellen Einspeiseleistung des Inverters entspricht.
 Weiterhin wird der Parameter *ison* extrahiert, um zu prüfen, ob das Relay im Shelly den Inverter vom Stromnetz getrennt hat.
+Dieses Relay wird außerhalb dieses Projektes von der Hausautomation gesteuert. Die Überwachung des Relais dient zur 
+Optimierung des Algorithmus des **PVMonitor**, da die PV-Leistung nun vollständig zur Ladung des Akkuspeichers verwendet wird.
 
 ### WCS1800
 Über den Hall-Effekt Stromsensor *WCS1800* wird permanent der Strom gemessen, mit der der Akku geladen bzw. entladen wird.
