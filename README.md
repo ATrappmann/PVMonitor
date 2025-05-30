@@ -236,6 +236,23 @@ Ohne den **PVMonitor** liegt dieser Wert fest bei 800W. Der **PVMonitor** setzt 
 Die Funktion *setTruckiMaxPower() setzt die maximale Einspeiseleistung des Wechselrichters auf den angegebenen Wert *maxPower* der in Watt [W] übergeben wird.
 Die Funktion selbst stellt sicher, dass dieser nicht <50W und >800W sein kann. Ein ungültiger Wert wird entsprechend korrigiert.
 
+## Konfiguration
+
+Damit der **PVMonitor** in der eingesetzten Umgebung korrekt funktioniert, müssen nur wenige Konfigurationsparameter in der Datei `Configuration.h` gesetzt werden.
+
+Zunächst werden die jeweiligen IP-Adressen der *Shelly-Komponenten* und des *Trucki-Sticks* eingetragen:
+
+![Config-IPAddresses](/docs/Config-IPAddresses.png)
+
+Als nächstes muss die Gesamtkapazität des Akkuspeichers und die gewünschte Minimalreserver für den Nachtbetrieb angegeben werden:
+
+![Config-BatteryCapacity](/docs/Config-BatteryCapacity.png)
+
+Zuletzt werden noch die Zugangsdaten für das heimische WLAN konfiguriert:
+
+![Config-WiFi](/docs/Config-WiFi.png]
+
+Nun kann der gesamte Code übersetzt werden und auf den *ESP* hochgeladen werden.
 
 ## Copyright
 **PVMonitor** is written by Andreas Trappmann.
