@@ -1,6 +1,6 @@
 # PVMonitor
 
-**PVMonitor** ist ein *ESP-Projekt* zur Optimierung der Null-Einspeisung eines Balkonkraftwerks mit Wechselrichter und Akkuspeicher.
+**PVMonitor** ist ein *ESP-Projekt* zur Optimierung der Null-Einspeisung eines *Balkonkraftwerks* mit Wechselrichter und Akkuspeicher.
 
 *Null-Einspeisung* bedeutet, dass die gesamte PV-Leistung selbst verbraucht wird und nicht für kleines Geld an den 
 Energieversorger abgegeben wird. Dazu steuert der **PVMonitor** die Einspeiseleistung so, dass der Wechselrichter 
@@ -32,9 +32,12 @@ Für den Akkuspeicher ist eine Lagerung im leeren Zustand ungünstig. Trennt man
 Ladeprozess des Akkuspeichers über die PV-Module bei der geringen Sonneneinstrahlung 3-5 Tage, bevor der Wechselrichter wieder in 
 Betrieb genommen werden kann. Innerhalb von kürzester Zeit wiederholt sich dieser Vorgang. Dies kann man nur dadurch abmildern, 
 dass man die maximale Einspeiseleistung des Wechselrichters manuell herabsetzt.
-Diese Lücke schließt der **PVMonitor**. Er sammelt die Daten der einzelnen Komponenten des *Balkonkraftwerks* ein und steuert
+Diesen Eingriff in die Konfiguration schließt der **PVMonitor**. Er sammelt die Daten der einzelnen Komponenten des *Balkonkraftwerks* ein und steuert
 die maximale Einspeiseleistung des Wechselrichters in Abhängigkeit von PV-Leistung, Verbrauch und Ladezustand des Akkuspeichers
 dynamisch.
+
+Zusätzlich stellt der **PVMonitor** über einen *Web-Server* eine Status-Übersicht, eine PV-Ertragshistorie der letzten 30 Tage und über eine JSON-Schnittstelle 
+ein Interface bereit. Die JSON-Schnittstelle wird in einem weiteren Projekt **PVMonitor-Display** dazu verwendet, auf einem Display die aktuellen Daten zu visualisieren.
 
 **Fazit**: Mit einem über den **PVMonitor** gesteuertem *Balkonkraftwerk* erreicht man zwar keine vollständige Autonomie vom Netzbetreiber, 
 kann aber gegenüber einer großen PV-Anlage mit einem Bruchteil der Investitionskosten den Netzbezug um bis zu 30-50% senken. Gleichzeitig
@@ -47,9 +50,9 @@ eingesetzt. Das genaue Modell wird in Abhängigkeit der verwendeten PV-Module ü
 ermittelt.
 
 Als Wechselrichter habe ich den [800W Lumentree](https://www.lumentree-portal.de/produkt/lumentree-sun-800/) Wechselrichter 
-mit [Trucki-Stick](https://www.lumentree-shop.de/produkt/trucki-t2sg-stick-fuer-lumentree-sun/) verwendet. Dieser basiert 
+mit [Trucki-Stick](https://www.lumentree-shop.de/produkt/trucki-t2sg-stick-fuer-lumentree-sun/) verwendet. Der Lumentree basiert 
 auf den blauen Sun-Wechselrichtern und enthält bereits die Steuerungsplatinen und ein WiFi-Gateway. Über den YouTube-Kanal
-von [@DerKanal](https://www.youtube.com/@DerKanal) bin ich auf diese Geräte aufmerksam geworden https://www.youtube.com/watch?v=SNDrvWKNmys. 
+von [@DerKanal](https://www.youtube.com/@DerKanal) bin ich auf diese Geräte aufmerksam geworden. In dem Video [Nulleinspeisung mit Lumentree feat. Trucki](https://www.youtube.com/watch?v=SNDrvWKNmys) wird die Funktion ausführlich erklärt. 
 Die Funktion des *Trucki-Stick* ist zudem unter https://github.com/trucki-eu/Trucki2Shelly-Gateway ausführlich beschrieben.
 
 Zur Energiemessung des Hausverbrauchs wird ein [Shelly 3EM](https://www.shelly.com/de/products/shelly-3em) verwendet. 
@@ -70,12 +73,23 @@ Seit der Inbetriebnahme habe ich es so geschafft, keine einzige KWh mehr einzusp
 
 ## Schaltplan
 
-Der Anschluss der Komponenten erfolgt in einer kleinen Unterverteilung mit Leitungsschutzschaltern und Überspannungsschutz.
+Der Anschluss der PV-Komponenten, des Wechselrichters und Akkuspeichers erfolgt in einer kleinen Unterverteilung mit Leitungsschutzschaltern und Überspannungsschutz.
 Der Schaltplan dazu sieht wie folgt aus:
 
 ![Schaltplan](/docs/Schaltplan.png)
 
 ## Funktion der aktiven Komponenten
+
+### Shelly 3EM
+Mit dem Einbau des 3-Phasen Energiemesser *Shelly 3EM* in den Zählerschrank der Hauptverteilung beginnt alles. Hier lohnt es sich auch gleich
+festzuhalten, welche Verbraucher/Räume auf welcher Phase liegen. Über die App oder das [Web-Interface](https://control.shelly.cloud/) kann man so
+zunächst einmal den Grundverbrauch ermitteln und den ein oder anderen Großverbraucher ausfindig machen. Eine vergessene alte 100W-Glühlampe im Keller oder
+in der Garage ist so schnell gefunden und ausgetauscht. Bei einer Tiefkühltruhe, die sich regelmäßig an- und ausschaltet, lohnt es sich den Verbrauch
+zu notieren und diese dann einmal vollständig abzutauen und das Gitter des Wärmetauscher zu säubern. So spart man schnell 100W in den Spitzen ein.
+
+Ist das *Balkonkraftwerk* dann wie hier beschrieben vollständig installiert, wird der *Shelly 3EM* vom **PVMonitor** dazu verwendet, den aktuellen
+Hausverbrauch zu ermittlen. Dieser wird über die URL `http://<IP-Adresse>/status` im Sekundentakt abgefragt. Aus der Antwort im JSON-Format wird der Parameter *total_power* 
+extrahiert, welcher den aktuellen Gesamtverbrauch des Hauses widerspiegelt. 
 
 ### MPPT-Laderegler
 Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen [*VE.direct*](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf)
@@ -86,11 +100,6 @@ Von den so bereitgestellten Daten werden folgende Informationen ausgewertet:
 * Der *Tracker Mode* (OFF, MPPT) zur Tag/Nacht-Erkennung verwendet. 
 * Der *Operation State* (Bulk, Absorption, Float) wird zur Kontrolle des Ladezustands der Batterie verwendet.
 * Die Summe der *Panel Power* von beiden Reglern ergibt die maximale Einspeiseleistung, die aktuell zur Verfügung steht.
-
-### Shelly 3EM
-Über den 3-Phasen Energiemesser *Shelly 3EM* wird der aktuelle Hausverbrauch ermittelt. Dieser wird vom **PVMonitor** über die
-URL `http://<IP-Adresse>/status` im Sekundentakt abgefragt. Aus der Antwort im JSON-Format wird der Parameter *total_power* 
-extrahiert, welcher den aktuellen Gesamtverbrauch des Hauses widerspiegelt. 
 
 ### Shelly Plug S
 Der Wechselrichter ist über einen *Shelly Plug S* ans Stromnetz angeschlossen.  Dieser wird vom **PVMonitor** über die 
@@ -188,6 +197,7 @@ Die benötigten Parameter werden in einem Objekt zurückgegeben:
 
 ### Die Funktion *int getTruckiMaxPower(String ip)*
 Die Funktion *getTruckiMaxPower()* liefert den auf dem TruckiStick als MAXPOWER eingestellten Wert für die maximale Einspeiseleistung des Wechselrichters in Watt [W] zurück.
+Ohne den **PVMonitor** liegt dieser Wert fest bei 800W. Der **PVMonitor** setzt diesen Wert allerdings aktiv herab und steuert so dynamisch die Ladekurve des Akkuspeichers.
 
 ### Die Funktion *bool setTruckiMaxPower(String ip, uint16_t maxPower)*
 Die Funktion *setTruckiMaxPower() setzt die maximale Einspeiseleistung des Wechselrichters auf den angegebenen Wert *maxPower* der in Watt [W] übergeben wird.
