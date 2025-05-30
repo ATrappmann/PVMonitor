@@ -88,6 +88,21 @@ Der Schaltplan dazu sieht wie folgt aus:
 
 ![Schaltplan](/docs/Schaltplan.png)
 
+Der **PVMonitor** ist auf einem Steckbrett schnell montiert:
+
+![PVMonitor](/docs/PVMonitor.png)
+
+Es werden folgende Kompenenten benötigt:
+* ESP8266 (D1 mini clone)
+* 0,96" OLED, 127x32 pixel
+* 4 Kanal bidirektionale 3.3V-5V Pegelwandler
+* WCS1800
+* (optional) 1 Mikro-Taster als Restart-Button
+
+Über Jumper-Kabel werden folgende Verbindungen hergestellt:
+
+![Connections](/docs/Connections.png)
+  
 ## Funktion der aktiven Komponenten
 
 ### Shelly 3EM
