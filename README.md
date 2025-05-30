@@ -123,8 +123,8 @@ Hausverbrauch zu ermittlen. Dieser wird über die URL `http://<IP-Adresse>/statu
 extrahiert, welcher den aktuellen Gesamtverbrauch des Hauses widerspiegelt. 
 
 ### MPPT-Laderegler
-Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen [*VE.direct*](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf)
-Schnittstellen ausgelesen. Die passenden Stecker für die Schnittstelle findet man, wenn man nach [JST PH2.0 4-pin](https://de.aliexpress.com/w/wholesale-jst-PH2.0-4pin.html) sucht.
+Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen [*VE.direct*-Schnittstelle](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf)
+ausgelesen. Die passenden Stecker für die Schnittstelle findet man, wenn man nach [JST PH2.0 4-pin](https://de.aliexpress.com/w/wholesale-jst-PH2.0-4pin.html) sucht.
 Ich habe gleich ein fertig konfektionierten Stecker mit Kabel verwendet, um mir das crimpen zu sparen.
 
 Von den so bereitgestellten Daten werden folgende Informationen ausgewertet:
@@ -156,11 +156,12 @@ Einspeiseleistung vorgegeben werden. Dieser Aufruf wird vom **PVMonitor** verwen
 der *Panel Power* immer etwas abgezweigt wird, bis eine Ladekapazität des Akkus erreicht wurde, die die Grundversorgung der Verbraucher 
 über die Nacht hinweg abdeckt.
 
+
 ## Die Software
 Die aktiven Komponeten werden über separate Klassen und Funktionen gesteuert und verwaltet.
 
 ### Die Klasse *Victron*
-Die Klasse *Victron* verwaltet die Abfrage der MPPT-Laderegler und dekodiert das serielle *VE.direct* Protokoll.
+Die Klasse *Victron* ist in der Datei `Victorn.h` definiert und verwaltet die Abfrage der MPPT-Laderegler und dekodiert das serielle [*VE.direct*-Protokoll](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf).
 
 Für jeden Laderegler wird separat ein Objekt mit der Nummer des Empfangspins für die serielle
 Kommunikation mit dem Laderegler angelegt:
@@ -217,7 +218,12 @@ Die Methode `getYieldToday` liefert die bisherige PV-Tagesleistung in Wattstunde
 #### float getYieldYesterday()
 Die Methode `getYieldYesterday` liefert die PV-Vortagesleistung in Wattstunden [Wh] zurück.
 
-### Die Funktion *getShellyStatus()*
+
+### Die *Shelly*-Funktionen
+Die Abfrage der *Shelly*-Komponenten erfolgt zustandslos, so dass die Ansteuerung über Funktionen implementiert
+sind, die in der Datei `Shelly.h` definiert sind.
+
+#### bool getShellyStatus((String ip, ShellyStatus *status)
 Über die Funktion `bool getShellyStatus(String ip, ShellyStatus *status)` werden per HTTP-Aufruf die Shelly-Komponenten abgefragt.
 
 Die benötigten Parameter werden in dem Objekt `ShellyStatus` zurückgegeben und enthalten folgende Attribute:
@@ -228,13 +234,65 @@ Die benötigten Parameter werden in dem Objekt `ShellyStatus` zurückgegeben und
 };
 ```
 
-### Die Funktion *int getTruckiMaxPower(String ip)*
-Die Funktion *getTruckiMaxPower()* liefert den auf dem TruckiStick als MAXPOWER eingestellten Wert für die maximale Einspeiseleistung des Wechselrichters in Watt [W] zurück.
+### Die *Trucki-Stick*-Funktionen
+Die Abfrage des *Trucki-Stick* erfolgt zustandslos, so dass die Ansteuerung über Funktionen implementiert
+sind, die in der Datei `Trucki.h` definiert sind.
+
+#### int getTruckiMaxPower(String ip)
+Die Funktion `getTruckiMaxPower(String ip)` liefert den auf dem *Trucki-Stick* als MAXPOWER eingestellten Wert für die maximale Einspeiseleistung des Wechselrichters in Watt [W] zurück.
 Ohne den **PVMonitor** liegt dieser Wert fest bei 800W. Der **PVMonitor** setzt diesen Wert allerdings aktiv herab und steuert so dynamisch die Ladekurve des Akkuspeichers.
 
-### Die Funktion *bool setTruckiMaxPower(String ip, uint16_t maxPower)*
-Die Funktion *setTruckiMaxPower() setzt die maximale Einspeiseleistung des Wechselrichters auf den angegebenen Wert *maxPower* der in Watt [W] übergeben wird.
+#### bool setTruckiMaxPower(String ip, uint16_t maxPower)
+Die Funktion `setTruckiMaxPower(String ip, uint16_t maxPower)` setzt die maximale Einspeiseleistung des Wechselrichters auf den angegebenen Wert *maxPower* der in Watt [W] übergeben wird.
 Die Funktion selbst stellt sicher, dass dieser nicht <50W und >800W sein kann. Ein ungültiger Wert wird entsprechend korrigiert.
+
+
+### Die Klasse *WCS1800*
+Die Klasse *WCS1800* verwaltet die Zugriffe auf den Hall-Effekt Stromsensor *WCS1800* und ist in der Datei `WCS1800.h` definiert.
+
+Hierzu wird ein Objekt angelegt und mit dem analogen Ausgangspin `AOUT` konfiguriert:
+```#include "WCS1800.h"
+WCS1800 wcs(CURRENT_SENSOR_PIN);	// AOUT of current monitor
+```
+
+In der Funktion `setup()` wird das Objekte dann wie folgt initalisiert:
+```// init mean current value
+for (int i=0; i<10; i++) {
+   wcs.readCurrent();
+}
+```
+
+In der Funktion `loop()` wird der Batteriestrom kontinuierlich durch fortlaufende Aufrufe der Methode `readMeanCurrent()` aktualisiert.
+
+#### float readMeanCurrent()
+Die Methode `readMeanCurrent()` liefert den gleitenden Mittelwert des Batteriestroms in Ampere [A] über die letzten 10 Messungen.
+Hierbei werden Ungenauigkeiten bei der Analog/Digital-Wandlungen des *ESP* über die Zeit ausgeglichen.
+
+
+### Die Klasse *Display*
+Die Klasse *Display* verwaltet die Darstellung auf dem kleinen 0,96"-OLED und ist in der Datei `Display.h` definiert.
+Sie dient zur Kapselung des konkret verwendeten Display vom Rest des Codes. Da die Klasse *Display* von der Klasse *Print* abgeleitet wurde,
+ist die Verwendung selbsterklärend.
+
+
+### Die Klasse *PersistentData*
+Die Klasse *PersistentData* verwaltet die historisch gesammelten Daten und ist in der Datei `PersistentData.h` definiert.
+Auch wird diese Klasse verwendet, um die im Laufe des Tages kumulierten Werte zu retten, wenn aufgrund von Störungen im WiFi, die aktiven
+Komponenten nicht erreicht werden können und der **PVMonitor** sicherheitshalber einen Neustart durchführt.
+
+
+### Die *Web-Server* Funktionen 
+Die *Callback-Funktionen* des Web-Servers sind in der Datei `WebServer.h` definiert.
+
+#### void handleRoot()
+Die Funktion `handleRoot()` liefert eine HTML-Seite mit internen Zustandswerten des **PVMonitor** zurück, wenn dieser über sein Web-Interface unter der Adresse `http:://<ip-adresse>/` aufgerufen wird.
+
+#### void handleStatus()
+Die Funktion `handleStatus()` liefert einen JSON-String mit den Statuswerten des **PVMonitor** zurück, wenn dieser über sein Web-Interface unter der Adresse `http://<ip-adresse>/status` aufgerufen wird.
+
+### void handleHistory()
+Die Funktion `handleHistory()` liefert eine HTML-Seite mit den letzten 30 Tageswerten der PV-Produktion des *Balkonkraftwerks* zurück, wenn der **PVMonitor** über sein Web-Interface unter der Adresse `http:://<ip-adresse>/history` aufgerufen wird.
+
 
 ## Konfiguration
 
@@ -247,7 +305,8 @@ bis diese konstant Stromwerte von 0A ausgeben:
 
 ![WCS1800-Calibration](/docs/WCS1800-Calibration.png)
 
-Hintergrundinformationen findet man im Datenblatt des [WCS1800](https://www.winson.com.tw/uploads/images/WCS1800.pdf).
+Auch lohnt es sich die tatsächliche Umgebungstemperatur zu messen und den Parameter `WCS_SENS_RATIO` gemäß den Werten aus dem 
+[Datenblatt des WCS1800](https://www.winson.com.tw/uploads/images/WCS1800.pdf) anzupassen.
 
 Die so ermittelten Werte müssen in die Datei `WCS1800.cpp` übernommen werden. Dies erfolgt durch kopieren in die gleichlautenden Zeilen:
 
@@ -277,6 +336,6 @@ All text above must be included in any redistribution.
 
 ## Release Notes
 
-Version 1.0 - XX.XX.2025
+Version 1.0 - 30.05.2025
 
   * Initial publication.
