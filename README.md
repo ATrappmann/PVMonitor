@@ -46,8 +46,12 @@ Für die PV-Module in Ost-/West-Ausrichtung werden zwei MPPT-Laderegler von [Vic
 eingesetzt. Das genaue Modell wird in Abhängigkeit der verwendeten PV-Module über die Seite https://www.victronenergy.com/mppt-calculator
 ermittelt.
 
-und ein [800W Lumentree](https://www.lumentree-portal.de/produkt/lumentree-sun-800/) Wechselrichter 
-mit [Trucki-Stick](https://www.lumentree-shop.de/produkt/trucki-t2sg-stick-fuer-lumentree-sun/) verwendet. 
+Als Wechselrichter habe ich den [800W Lumentree](https://www.lumentree-portal.de/produkt/lumentree-sun-800/) Wechselrichter 
+mit [Trucki-Stick](https://www.lumentree-shop.de/produkt/trucki-t2sg-stick-fuer-lumentree-sun/) verwendet. Dieser basiert 
+auf den blauen Sun-Wechselrichtern und enthält bereits die Steuerungsplatinen und ein WiFi-Gateway. Über den YouTube-Kanal
+von [@DerKanal](https://www.youtube.com/@DerKanal) bin ich auf diese Geräte aufmerksam geworden https://www.youtube.com/watch?v=SNDrvWKNmys. 
+Die Funktion des *Trucki-Stick* ist zudem unter https://github.com/trucki-eu/Trucki2Shelly-Gateway ausführlich beschrieben.
+
 Zur Energiemessung des Hausverbrauchs wird ein [Shelly 3EM](https://www.shelly.com/de/products/shelly-3em) verwendet. 
 Die Einspeiseleistung wird mit einem [Shelly Plug S](https://www.shelly.com/de/products/shelly-plug-s-gen3) gemessen. 
 Der Ladezustand des Akkus wird mit dem Hall-Effekt Stromsensor [WCS1800](https://www.google.com/search?q=wcs1800) überwacht.
