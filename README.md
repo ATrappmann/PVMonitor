@@ -238,6 +238,22 @@ Die Funktion selbst stellt sicher, dass dieser nicht <50W und >800W sein kann. E
 
 ## Konfiguration
 
+### Kalibrierung des WCS1800
+Damit der *WCS1800* Hall-Effekt Sensor die richtigen Daten über den Ladezustand des Akkuspeichers ermittelt, müssen die Parameter zunächst kalibriert werden.
+
+In der Datei `WCS1800-Calibration/WCS1800-Calibration.ino` ist hierzu ein kleiner *Sketch* der zunächst auf den *ESP* hochgeladen werden sollte. Zur Kalibrierung
+wird der Akkuspeicher durch Ausschalten des Leitungsschutzschalters vom *Balkonkraftwerk* getrennt. Die folgenden Parameter sollten solange angepasst werden,
+bis diese konstant Stromwerte von 0A ausgeben:
+
+![WCS1800-Calibration](/docs/WCS1800-Calibration.png)
+
+Hintergrundinformationen findet man im Datenblatt des [WCS1800](https://www.winson.com.tw/uploads/images/WCS1800.pdf).
+
+Die so ermittelten Werte müssen in die Datei `WCS1800.cpp` übernommen werden. Dies erfolgt durch kopieren in die gleichlautenden Zeilen:
+
+![WCS1800-Parameter](/docs/WCS1800-Parameter.png)
+
+### Configuration.h
 Damit der **PVMonitor** in der eingesetzten Umgebung korrekt funktioniert, müssen nur wenige Konfigurationsparameter in der Datei `Configuration.h` gesetzt werden.
 
 Zunächst werden die jeweiligen IP-Adressen der *Shelly-Komponenten* und des *Trucki-Sticks* eingetragen:
