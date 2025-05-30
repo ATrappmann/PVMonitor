@@ -41,7 +41,7 @@ ein Interface bereit. Die JSON-Schnittstelle wird in einem weiteren Projekt **PV
 an einer beliebigen Stelle im Haus zu visualisieren.
 
 ![History](/docs/History.png)
-![PVMonitor-Display](/docs/PVMonitor-Display.jpg)
+![PVMonitor-Display](/docs/PVMonitor-Display.png)
 
 **Fazit**: Mit einem über den **PVMonitor** gesteuertem *Balkonkraftwerk* erreicht man zwar keine vollständige Autonomie vom Netzbetreiber, 
 kann aber gegenüber einer großen PV-Anlage mit einem Bruchteil der Investitionskosten den Netzbezug um bis zu 30-50% senken. Gleichzeitig
