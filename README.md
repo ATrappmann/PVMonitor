@@ -43,6 +43,9 @@ wird jede selbst erzeugte KWh auch selbst verwertet, was die Amortisierungszeit 
 ## Verwendete Komponenten
 
 Für die PV-Module in Ost-/West-Ausrichtung werden zwei MPPT-Laderegler von [Victron](https://www.victronenergy.de/solar-charge-controllers/) 
+eingesetzt. Das genaue Modell wird in Abhängigkeit der verwendeten PV-Module über die Seite https://www.victronenergy.com/mppt-calculator
+ermittelt.
+
 und ein [800W Lumentree](https://www.lumentree-portal.de/produkt/lumentree-sun-800/) Wechselrichter 
 mit [Trucki-Stick](https://www.lumentree-shop.de/produkt/trucki-t2sg-stick-fuer-lumentree-sun/) verwendet. 
 Zur Energiemessung des Hausverbrauchs wird ein [Shelly 3EM](https://www.shelly.com/de/products/shelly-3em) verwendet. 
@@ -64,10 +67,14 @@ Seit der Inbetriebnahme habe ich es so geschafft, keine einzige KWh mehr einzusp
 ## Funktion der aktiven Komponenten
 
 ### MPPT-Laderegler
-Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen *VE.direct* Schnittstellen ausgelesen. 
-Dabei wird der *Tracker Mode* (OFF, MPPT) zur Tag/Nacht-Erkennung verwendet. 
-Der *Operation State* (Bulk, Absorption, Float) wird zur Kontrolle des Ladezustands der Batterie verwendet.
-Die Summe der *Panel Power* von beiden Reglern ergibt die maximale Einspeiseleistung, die aktuell zur Verfügung steht.
+Die beiden MPPT-Laderegler von Victron werden vom **PVMonitor** über die seriellen [*VE.direct*](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf)
+Schnittstellen ausgelesen. Die passenden Stecker für die Schnittstelle findet man, wenn man nach [JST PH2.0 4-pin](https://de.aliexpress.com/w/wholesale-jst-PH2.0-4pin.html) sucht.
+Ich habe gleich ein fertig konfektionierten Stecker mit Kabel verwendet, um mir das crimpen zu sparen.
+
+Von den so bereitgestellten Daten werden folgende Informationen ausgewertet:
+* Der *Tracker Mode* (OFF, MPPT) zur Tag/Nacht-Erkennung verwendet. 
+* Der *Operation State* (Bulk, Absorption, Float) wird zur Kontrolle des Ladezustands der Batterie verwendet.
+* Die Summe der *Panel Power* von beiden Reglern ergibt die maximale Einspeiseleistung, die aktuell zur Verfügung steht.
 
 ### Shelly 3EM
 Über den 3-Phasen Energiemesser *Shelly 3EM* wird der aktuelle Hausverbrauch ermittelt. Dieser wird vom **PVMonitor** über die
