@@ -9,7 +9,7 @@
 #define CURRENT_SENSOR_PIN  A0
 
 #define SHELLY_INVERTER_IP  "<IP-Adresse>" 	// ShellyPlug of Inverter
-#define TRUCKI_IP 			"<IP-Adresse>"	// TruckiStick	
+#define TRUCKI_IP 			  "<IP-Adresse>"	// TruckiStick	
 #define SHELLY_3EM_IP 		"<IP-Adresse>" 	// Shelly 3EM (3 phase house energy meter)
 
 #define TRUCKI_MIN_LOAD  50 // W
