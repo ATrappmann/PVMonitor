@@ -64,6 +64,13 @@ durch die PV-Module erzeugt, von denen ungefähr die Hälfte direkt verbraucht w
 
 Seit der Inbetriebnahme habe ich es so geschafft, keine einzige KWh mehr einzuspeisen!
 
+## Schaltplan
+
+Der Anschluss der Komponenten erfolgt in einer kleinen Unterverteilung mit Leitungsschutzschaltern und Überspannungsschutz.
+Der Schaltplan dazu sieht wie folgt aus:
+
+![Schaltplan](/docs/Schaltplan.png)
+
 ## Funktion der aktiven Komponenten
 
 ### MPPT-Laderegler
