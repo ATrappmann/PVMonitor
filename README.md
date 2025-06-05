@@ -158,7 +158,12 @@ der *Panel Power* immer etwas abgezweigt wird, bis eine Ladekapazität des Akkus
 
 
 ## Die Software
-Die aktiven Komponenten werden über separate Klassen und Funktionen gesteuert und verwaltet.
+Für den **PVMonitor** werden folgende externe Software-Bibliotheken benötigt:
+* https://github.com/jwrw/ESP_EEPROM
+* https://github.com/adafruit/Adafruit_SSD1306
+* https://github.com/plerup/espsoftwareserial/
+
+Die aktiven Komponenten des **PVMonitor** werden über separate Klassen und Funktionen gesteuert und verwaltet.
 
 ### Die Klasse *Victron*
 Die Klasse *Victron* ist in der Datei `Victorn.h` definiert und verwaltet die Abfrage der MPPT-Laderegler und dekodiert das serielle [*VE.direct*-Protokoll](https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf).
